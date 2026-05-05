@@ -52,4 +52,33 @@ const us_states = {
   WY: "Wyoming",
 };
 
+/**
+ * Normalizes a state value to its 2-letter abbreviation.
+ * Accepts either a full state name (e.g. "California") or an abbreviation (e.g. "CA").
+ * Returns the abbreviation in uppercase, or null if the value is unrecognized.
+ *
+ * @param {string} state
+ * @returns {string|null}
+ */
+const normalizeState = (state) => {
+  if (!state || typeof state !== "string") return null;
+
+  const trimmed = state.trim();
+
+  // Already a 2-letter abbreviation
+  if (/^[a-zA-Z]{2}$/.test(trimmed)) {
+    const upper = trimmed.toUpperCase();
+    return us_states[upper] ? upper : null;
+  }
+
+  // Full name — build a reverse lookup (case-insensitive)
+  const lower = trimmed.toLowerCase();
+  const match = Object.entries(us_states).find(
+    ([, fullName]) => fullName.toLowerCase() === lower
+  );
+
+  return match ? match[0] : null;
+};
+
 module.exports = us_states;
+module.exports.normalizeState = normalizeState;

@@ -4,6 +4,8 @@ const config = require("config");
 const bcrypt = require("bcrypt");
 const emailService = require("../utilities/email.js");
 
+const { normalizeState } = require("../constants/us_states");
+
 const Pool = require("pg").Pool;
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL || config.get("connectionString"),
@@ -216,6 +218,11 @@ router.post("/therapist", async (req, res) => {
       return res.status(400).send(`You must be at least ${MIN_AGE} years old.`);
     }
 
+    const normalizedState = normalizeState(state);
+    if (!normalizedState) {
+      return res.status(400).send("Bad request. Invalid state value.");
+    }
+
     let user = await pool.query(
       "SELECT * FROM tb_authorization WHERE email = $1",
       [email]
@@ -242,7 +249,7 @@ router.post("/therapist", async (req, res) => {
         addressL2,
         addressL1,
         city,
-        state,
+        normalizedState,
         zipcode,
         enabled,
         status,

@@ -54,7 +54,7 @@ const isValidEditTherapistRequestBody = async (body) => {
   }
 
   const addressRegex = /^[a-zA-Z0-9\s,'.-]*$/;
-  if (!addressL1.match(addressRegex) || !addressL2.match(addressRegex)) {
+  if (!addressL1.match(addressRegex) || (addressL2 && !addressL2.match(addressRegex))) {
     return false;
   }
 

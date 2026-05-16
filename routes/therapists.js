@@ -68,7 +68,7 @@ const isValidEditTherapistRequestBody = async (body) => {
     return false;
   }
 
-  if (summary.length > 250) {
+  if (summary.length > 500) {
     return false;
   }
 

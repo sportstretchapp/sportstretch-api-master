@@ -441,6 +441,21 @@ const sendTherapistWelcomeEmail = async (therapistId) => {
   });
 };
 
+const sendTherapistProfileEditAdminNotification = async (therapistId) => {
+  const therapist = await getTherapistObj(therapistId);
+  const message = `Recovery specialist ${therapist.first_name} (ID: ${therapistId}) has submitted profile edits and their account has been placed in pending status. Please review and re-approve or decline their profile.`;
+  const subject = `Recovery Specialist Profile Edits Pending Review (ID: ${therapistId})`;
+  const mailObj = makeEmail(message, customerServiceEmail, subject);
+  transporter.sendMail(mailObj, (error, info) => {
+    if (error) {
+      console.error("Error sending email:", error);
+    } else {
+      console.warn("Email sent successfully!");
+      console.warn("Message ID:", info.messageId);
+    }
+  });
+};
+
 // send email to admin when new therapist is registered
 
 const sendTherapistRegisteredEmailToAdmin = async (therapistId) => {
@@ -491,5 +506,6 @@ module.exports = {
   sendTherapistWelcomeEmail,
   sendAthleteWelcomeEmail,
   sendTherapistRegisteredEmailToAdmin,
+  sendTherapistProfileEditAdminNotification,
   sendVerificationEmail,
 };
